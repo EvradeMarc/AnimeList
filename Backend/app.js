@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const userRoutes = require("./Routes/userRoutes");
 const animeRoutes = require("./Routes/animeRoutes");
+const listPersoRoutes = require("./Routes/listPersoRoutes");
 dotenv.config();
 
 const app = express();
@@ -21,5 +22,6 @@ app.use(cors());
 
 app.use("/api/users", userRoutes);
 app.use("/api/animes", animeRoutes);
+app.use("/api/lists", listPersoRoutes);
 
 module.exports = app;

@@ -6,7 +6,7 @@ const animeSchema = mongoose.createSchema(
     description: { type: String, required: true },
     image: { type: String, required: true },
     genre: { type: [String], required: true },
-    season: { type: number, required: true },
+    season: { type: Number, required: true },
     episode: { type: Number, required: true },
     releaseDate: { type: Date, required: true },
     rating: { type: Number, min: 0, max: 10 },

@@ -10,6 +10,7 @@ const animeSchema = mongoose.createSchema(
     episode: { type: Number, required: true },
     releaseDate: { type: Date, required: true },
     rating: { type: Number, min: 0, max: 10 },
+    state: { type: String, enum: ["En cours", "Terminé", "À venir"] },
   },
   { timestamps: true }
 );

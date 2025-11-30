@@ -1,16 +1,21 @@
 const mongoose = require("mongoose");
 
-const animeSchema = mongoose.createSchema(
+const animeSchema = new mongoose.Schema(
   {
     title: { type: String, required: true },
-    description: { type: String, required: true },
-    image: { type: String, required: true },
-    genre: { type: [String], required: true },
+    title_romaji: { type: String },
+    title_english: { type: String },
+    description: { type: String },
+    image: { type: String },
+    genres: { type: [String] },
     season: { type: Number, required: true },
     episode: { type: Number, required: true },
-    releaseDate: { type: Date, required: true },
-    rating: { type: Number, min: 0, max: 10 },
-    state: { type: String, enum: ["En cours", "Terminé", "À venir"] },
+    releaseDate: { type: Date },
+    statuts: {
+      type: String,
+      enum: ["En cours", "En attente de la suite", "Terminé", "À venir"],
+      required: true,
+    },
   },
   { timestamps: true }
 );

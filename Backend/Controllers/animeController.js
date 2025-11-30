@@ -1,17 +1,49 @@
 const Anime = require("../Models/Anime");
+const axios = require("axios");
 
-exports.createAnime = (req, res, next) => {
+exports.createAnime = async (req, res, next) => {
+  let animeData = await axios
+    .post("https://graphql.anilist.co", {
+      query: `
+      query ($title: String) {
+        Media(search: $title, type: ANIME) {
+          title { romaji english}
+          description
+          coverImage { extraLarge }
+          genres
+          startDate { year month day }
+        }
+      }
+      `,
+      variables: {
+        title: req.body.title,
+      },
+    })
+    .then((response) => response.data.data.Media)
+    .catch((error) => {
+      return res
+        .status(400)
+        .json({ error: "Error fetching data from AniList API" });
+    });
+
   const anime = new Anime({
+    //Enter by the user
     title: req.body.title,
-    description: req.body.description,
-    image: req.body.image,
-    genre: req.body.genre,
     season: req.body.season,
     episode: req.body.episode,
-    releaseDate: req.body.releaseDate,
-    rating: req.body.rating,
+    statuts: req.body.statuts,
+
+    //Fetched from AniList API
+    title_romaji: animeData.title.romaji,
+    title_english: animeData.title.english,
+    description: animeData.description,
+    image: animeData.coverImage.extraLarge,
+    genres: animeData.genres,
+    releaseDate: new Date(
+      `${animeData.startDate.day}-${animeData.startDate.month}-${animeData.startDate.year}`
+    ),
   });
-  anime
+  await anime
     .save()
     .then(() => {
       res.status(201).json({ message: "Anime created successfully!" });
@@ -21,8 +53,8 @@ exports.createAnime = (req, res, next) => {
     });
 };
 
-exports.getAnimes = (req, res, next) => {
-  Anime.find()
+exports.getAnimes = async (req, res, next) => {
+  await Anime.find()
     .then((animes) => {
       res.status(200).json(animes);
     })
@@ -31,8 +63,8 @@ exports.getAnimes = (req, res, next) => {
     });
 };
 
-exports.getAnimeById = (req, res, next) => {
-  Anime.findById(req.params.id)
+exports.getAnimeById = async (req, res, next) => {
+  await Anime.findById(req.params.id)
     .then((anime) => {
       if (anime) {
         res.status(200).json(anime);
@@ -45,11 +77,11 @@ exports.getAnimeById = (req, res, next) => {
     });
 };
 
-exports.updateAnime = (req, res, next) => {
-  Anime.findByIdAndUpdate(req.params.id, req.body, { new: true })
+exports.updateAnime = async (req, res, next) => {
+  await Anime.findByIdAndUpdate(req.params.id, req.body, { new: true })
     .then((anime) => {
       if (anime) {
-        res.status(200).json(anime);
+        return res.status(200).json({ message: "Anime updated successfully" });
       } else {
         res.status(404).json({ message: "Anime not found!" });
       }
@@ -59,8 +91,8 @@ exports.updateAnime = (req, res, next) => {
     });
 };
 
-exports.deleteAnime = (req, res, next) => {
-  Anime.findByIdAndDelete(req.params.id)
+exports.deleteAnime = async (req, res, next) => {
+  await Anime.findByIdAndDelete(req.params.id)
     .then((anime) => {
       if (anime) {
         res.status(200).json({ message: "Anime deleted successfully!" });

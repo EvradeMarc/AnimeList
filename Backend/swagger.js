@@ -83,6 +83,22 @@ const options = {
             },
           },
         },
+        UpdateAnimeInput: {
+          type: "object",
+          properties: {
+            season: { type: "number" },
+            episode: { type: "number" },
+            statuts: {
+              type: "string",
+              enum: [
+                "En cours",
+                "En attente de la suite",
+                "Terminé",
+                "À venir",
+              ],
+            },
+          },
+        },
         LoginInput: {
           type: "object",
           required: ["email", "password"],

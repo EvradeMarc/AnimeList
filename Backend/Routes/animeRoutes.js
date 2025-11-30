@@ -107,7 +107,7 @@ router.get("/:id", auth, animeController.getAnimeById);
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/CreateAnimeInput'
+ *             $ref: '#/components/schemas/UpdateAnimeInput'
  *     responses:
  *       200:
  *         description: Anime mis à jour

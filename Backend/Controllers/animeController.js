@@ -1,9 +1,12 @@
 const Anime = require("../Models/Anime");
+const User = require("../Models/User");
 const axios = require("axios");
 
 exports.createAnime = async (req, res, next) => {
-  let animeData = await axios
-    .post("https://graphql.anilist.co", {
+  let animeData;
+
+  try {
+    const response = await axios.post("https://graphql.anilist.co", {
       query: `
       query ($title: String) {
         Media(search: $title, type: ANIME) {
@@ -18,13 +21,11 @@ exports.createAnime = async (req, res, next) => {
       variables: {
         title: req.body.title,
       },
-    })
-    .then((response) => response.data.data.Media)
-    .catch((error) => {
-      return res
-        .status(400)
-        .json({ error: "Error fetching data from AniList API" });
     });
+    animeData = response.data.data.Media;
+  } catch (error) {
+    return res.status(400).json({ error: "Error fetching AniList API data" });
+  }
 
   const anime = new Anime({
     //Enter by the user
@@ -40,17 +41,48 @@ exports.createAnime = async (req, res, next) => {
     image: animeData.coverImage.extraLarge,
     genres: animeData.genres,
     releaseDate: new Date(
-      `${animeData.startDate.day}-${animeData.startDate.month}-${animeData.startDate.year}`
+      animeData.startDate.year,
+      animeData.startDate.month - 1,
+      animeData.startDate.day
     ),
   });
-  await anime
-    .save()
-    .then(() => {
-      res.status(201).json({ message: "Anime created successfully!" });
-    })
-    .catch((error) => {
-      res.status(400).json({ error: error.message });
-    });
+
+  try {
+    await anime.save();
+
+    const user = await User.findById(req.auth.userId);
+
+    if (!user.animes.includes(anime._id)) {
+      user.animes.push(anime._id);
+      await user.save();
+    }
+
+    res.status(201).json({ message: "Anime created successfully!" });
+  } catch (error) {
+    if (error.code === 11000) {
+      const updatedAnime = await Anime.findOneAndUpdate(
+        {
+          $or: [
+            { title_romaji: anime.title_romaji },
+            { title_english: anime.title_english },
+          ],
+        },
+        {
+          $set: {
+            season: anime.season,
+            episode: anime.episode,
+          },
+        },
+        { new: true }
+      );
+
+      return res.status(200).json({
+        message: "Anime already exists. Updated instead.",
+        anime: updatedAnime,
+      });
+    }
+    res.status(400).json({ error: error.message });
+  }
 };
 
 exports.getAnimes = async (req, res, next) => {
@@ -95,6 +127,12 @@ exports.deleteAnime = async (req, res, next) => {
   await Anime.findByIdAndDelete(req.params.id)
     .then((anime) => {
       if (anime) {
+        User.findById(req.auth.userId).then((user) => {
+          user.animes = user.animes.filter(
+            (animeId) => animeId.toString() !== req.params.id
+          );
+          user.save();
+        });
         res.status(200).json({ message: "Anime deleted successfully!" });
       } else {
         res.status(404).json({ message: "Anime not found!" });

@@ -6,7 +6,9 @@ const userSchema = new mongoose.Schema(
     username: { type: String, required: true, unique: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    animes: [{ type: mongoose.Schema.Types.ObjectId, ref: "Anime" }],
+    animes: [
+      { type: mongoose.Schema.Types.ObjectId, ref: "Anime", default: [] },
+    ],
   },
   { timestamps: true }
 );

@@ -27,7 +27,7 @@ const options = {
             username: { type: "string", required: true, unique: true },
             email: { type: "string", required: true, unique: true },
             password: { type: "string", required: true },
-            animes: [{ type: mongoose.Schema.Types.ObjectId, ref: "Anime" }],
+            animes: { type: "array", items: { type: "string" } },
           },
         },
         Auth: {
@@ -47,7 +47,7 @@ const options = {
             title_english: { type: "string" },
             description: { type: "string" },
             image: { type: "string" },
-            genre: {
+            genres: {
               type: "array",
               items: { type: "string" },
             },
@@ -70,6 +70,22 @@ const options = {
           required: ["title", "season", "episode", "statuts"],
           properties: {
             title: { type: "string" },
+            season: { type: "number" },
+            episode: { type: "number" },
+            statuts: {
+              type: "string",
+              enum: [
+                "En cours",
+                "En attente de la suite",
+                "Terminé",
+                "À venir",
+              ],
+            },
+          },
+        },
+        UpdateAnimeInput: {
+          type: "object",
+          properties: {
             season: { type: "number" },
             episode: { type: "number" },
             statuts: {

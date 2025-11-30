@@ -27,7 +27,7 @@ const options = {
             username: { type: "string", required: true, unique: true },
             email: { type: "string", required: true, unique: true },
             password: { type: "string", required: true },
-            animes: [{ type: mongoose.Schema.Types.ObjectId, ref: "Anime" }],
+            animes: { type: "array", items: { type: "string" } },
           },
         },
         Auth: {
@@ -47,7 +47,7 @@ const options = {
             title_english: { type: "string" },
             description: { type: "string" },
             image: { type: "string" },
-            genre: {
+            genres: {
               type: "array",
               items: { type: "string" },
             },

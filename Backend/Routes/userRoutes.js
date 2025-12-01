@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const auth = require("../Middlewares/auth");
-const userController = require("../Controllers/userRoutes");
+const userController = require("../Controllers/userController");
 
 /**
  * @swagger
@@ -34,5 +34,30 @@ const userController = require("../Controllers/userRoutes");
  *         description: Non autorisé
  */
 router.get("/animes", auth, userController.getAnimesByUser);
+
+/**
+ * @swagger
+ * /api/user/lists:
+ *  get:
+ *    tags:
+ *      - Users
+ *    summary: Obtenir les listes personnelles d'un utilisateur
+ *    security:
+ *      - bearerAuth: []
+ *    responses:
+ *      200:
+ *        description: Listes personnelles de l'utilisateur
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: array
+ *              items:
+ *                $ref: '#/components/schemas/ListPerso'
+ *      400:
+ *        description: Requête invalide
+ *      401:
+ *        description: Non autorisé
+ */
+router.get("/lists", auth, userController.getListsPersoByUser);
 
 module.exports = router;

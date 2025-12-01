@@ -1,4 +1,5 @@
 const swaggerJsdoc = require("swagger-jsdoc");
+const { addAnimeToListPerso } = require("./Controllers/listPersoController");
 
 const options = {
   definition: {
@@ -64,6 +65,19 @@ const options = {
             },
           },
         },
+        ListPerso: {
+          type: "object",
+          required: ["userId", "name"],
+          properties: {
+            _id: { type: "string" },
+            userId: { type: "string" },
+            name: { type: "string" },
+            animes: {
+              type: "array",
+              items: { type: "string" },
+            },
+          },
+        },
         CreateAnimeInput: {
           type: "object",
           required: ["title", "season", "episode", "statuts"],
@@ -80,6 +94,27 @@ const options = {
                 "À venir",
               ],
             },
+          },
+        },
+        CreateListPersoInput: {
+          type: "object",
+          required: ["name"],
+          properties: {
+            name: { type: "string" },
+          },
+        },
+        addAnimeToListPersoInput: {
+          type: "object",
+          required: ["animeId"],
+          properties: {
+            animeId: { type: "string" },
+          },
+        },
+        removeAnimeFromListPersoInput: {
+          type: "object",
+          required: ["animeId"],
+          properties: {
+            animeId: { type: "string" },
           },
         },
         UpdateAnimeInput: {

@@ -7,7 +7,7 @@ const listPersoSchema = mongoose.Schema(
       ref: "User",
       required: true,
     },
-    name: { type: String, required: true },
+    name: { type: String, required: true, unique: true },
     animes: [{ type: mongoose.Schema.Types.ObjectId, ref: "Anime" }],
   },
   { timestamps: true }

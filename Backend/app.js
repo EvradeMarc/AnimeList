@@ -14,12 +14,9 @@ dotenv.config();
 const app = express();
 
 mongoose
-  .connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect(process.env.MONGO_URI)
   .then(() => console.log("Connected to MongoDB successfully!"))
-  .catch(() => console.log("Failed to connect to MongoDB!"));
+  .catch((error) => console.log("Failed to connect to MongoDB!", error));
 
 app.use(express.json());
 

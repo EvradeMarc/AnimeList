@@ -1,6 +1,11 @@
 const Anime = require("../Models/Anime");
 const User = require("../Models/User");
 const axios = require("axios");
+const dotenv = require("dotenv");
+dotenv.config();
+
+const deepl = require("deepl-node");
+const deeplClient = new deepl.DeepLClient(process.env.AUTH_DEEPL_API_KEY);
 
 exports.createAnime = async (req, res, next) => {
   let animeData;
@@ -23,6 +28,13 @@ exports.createAnime = async (req, res, next) => {
       },
     });
     animeData = response.data.data.Media;
+    const descriptionText = animeData.description.replace(/<[^>]+>/g, "");
+    const responseTranslate = await deeplClient.translateText(
+      descriptionText,
+      null,
+      "fr"
+    );
+    animeData.description = responseTranslate.text;
   } catch (error) {
     return res.status(400).json({ error: "Error fetching AniList API data" });
   }

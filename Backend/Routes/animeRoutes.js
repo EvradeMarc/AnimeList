@@ -39,6 +39,29 @@ router.post("/create", auth, animeController.createAnime);
 
 /**
  * @swagger
+ * /api/animes/genres:
+ *   get:
+ *     tags:
+ *       - Animes
+ *     summary: Obtenir la liste des genres d'animes
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Liste des genres d'animes
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: string
+ *       400:
+ *         description: Requête invalide
+ */
+router.get("/genres", auth, animeController.getGenres);
+
+/**
+ * @swagger
  * /api/animes:
  *   get:
  *     tags:

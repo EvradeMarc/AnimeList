@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const userController = require("../Controllers/userController");
+const userController = require("../Controllers/authController");
 
 /**
  * @swagger
@@ -11,7 +11,7 @@ const userController = require("../Controllers/userController");
 
 /**
  * @swagger
- * /api/users/signup:
+ * /api/auth/signup:
  *   post:
  *     tags:
  *       - Users
@@ -32,7 +32,7 @@ router.post("/signup", userController.signup);
 
 /**
  * @swagger
- * /api/users/login:
+ * /api/auth/login:
  *   post:
  *     tags:
  *       - Users

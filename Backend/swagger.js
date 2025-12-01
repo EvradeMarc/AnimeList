@@ -1,5 +1,4 @@
 const swaggerJsdoc = require("swagger-jsdoc");
-const mongoose = require("mongoose");
 
 const options = {
   definition: {

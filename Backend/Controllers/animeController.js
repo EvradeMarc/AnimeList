@@ -107,6 +107,15 @@ exports.getAnimes = async (req, res, next) => {
     });
 };
 
+exports.getGenres = async (req, res, next) => {
+  try {
+    const genres = await Anime.distinct("genres");
+    res.status(200).json(genres);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
 exports.getAnimeById = async (req, res, next) => {
   await Anime.findById(req.params.id)
     .then((anime) => {

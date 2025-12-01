@@ -1,10 +1,10 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
-const userRoutes = require("./Routes/authRoutes");
+const authRoutes = require("./Routes/authRoutes");
 const animeRoutes = require("./Routes/animeRoutes");
 const listPersoRoutes = require("./Routes/listPersoRoutes");
-
+const userRoutes = require("./Routes/userRoutes");
 const swaggerUi = require("swagger-ui-express");
 const swaggerSpec = require("./swagger");
 
@@ -22,7 +22,8 @@ app.use(express.json());
 
 app.use(cors());
 
-app.use("/api/auth", userRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/user", userRoutes);
 app.use("/api/animes", animeRoutes);
 app.use("/api/lists", listPersoRoutes);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));

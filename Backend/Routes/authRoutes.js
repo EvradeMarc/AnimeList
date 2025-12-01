@@ -5,8 +5,8 @@ const userController = require("../Controllers/authController");
 /**
  * @swagger
  * tags:
- *   - name: Users
- *     description: Gestion des utilisateurs
+ *   - name: Auth
+ *     description: Autentification des utilisateurs
  */
 
 /**
@@ -14,7 +14,7 @@ const userController = require("../Controllers/authController");
  * /api/auth/signup:
  *   post:
  *     tags:
- *       - Users
+ *       - Auth
  *     summary: Créer un nouvel utilisateur
  *     requestBody:
  *       required: true
@@ -35,7 +35,7 @@ router.post("/signup", userController.signup);
  * /api/auth/login:
  *   post:
  *     tags:
- *       - Users
+ *       - Auth
  *     summary: Se connecter
  *     requestBody:
  *       required: true
